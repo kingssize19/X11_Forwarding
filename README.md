@@ -107,9 +107,48 @@ Artık ssh host_name yazmak yeterlidir.
 
 
 
+2. **Sunucu Tarafı (Xavier NX) kontrolleri (bir kere)**
+
+* **/etc/ssh/sshd_config :**
+
+```cmd
+X11Forwarding yes
+X11UseLocalhost yes
+```
+
+```cmd
+sudo systemctl restart ssh
+sudo apt install -y xauth x11-apps
+```
+
+```cmd
+ssh ekin@10.62.2.61
+echo $DISPLAY          # dolu olmalı (örn: localhost:10.0)
+xclock                 # pencere sende açılmalı
+```
+
+3. **PyQt için küçük uyumluluk bayrağı (gerekirse)**
+
+```cmd
+export QT_X11_NO_MITSHM=1 
+```
 
 
 
+# Ekstra (X11 kurulum Xavier NX tarafı)
+
+
+```cmd
+sudo apt update
+sudo apt install -y openssh-server xauth x11-apps mesa-utils
+
+sudo nano /etc/ssh/sshd_config
+# Bu satırlar böyle olmalı:
+# X11Forwarding yes
+# X11UseLocalhost yes
+
+sudo systemctl restart ssh
+```
 
 
 
