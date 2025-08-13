@@ -86,9 +86,19 @@ Sunucudaki **X11Forwarding yes** sadece izin verir; **istemci talep etmedikçe**
 * ~/.ssh/config dosyası oluştur/editle :
 
 ```cmd
-Host host_name
-  HostName host_ip        # Bağlanılacak gerçek IP/hostname
-  User remote_username    # Uzak kullanıcı adı 
+Host host_name host_ip
+  HostName host_ip
+  User remote_username
+  ForwardX11 yes
+  ForwardX11Trusted yes
+  Compression yes
+```
+* Örnek kullanım
+
+```cmd
+Host xavier 10.62.2.61
+  HostName 10.62.2.61
+  User hayati
   ForwardX11 yes
   ForwardX11Trusted yes
   Compression yes
