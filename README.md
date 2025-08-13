@@ -30,11 +30,6 @@
 5. Yerel X sunucusu çizer. Klavye/fare olayları **ters yönde** aynı tünelden uygulamaya döner.  
 
 
-### -X vs -Y
-
-* **-X (untrusted)** Güvenlik kısıtları yüksek; bazı Qt/OpenGL özellikleri çalışmayabilir.
-* **-Y (trusted) :** Kısıtlar kalkar; pratikte PyQt/Qt için daha sorunsuzdur. **Yalnız güvendiğin hostlara** karşı kullan.
-
 ### GÜvenlik & Yetkilendirme
 
 * **xauth (MIT-MAGIC-COOKIE-1) :** "Bu X sunucusuna kim pencere açabilir?" sorusunun cevabı. SSH bu çerezleri otomatik yönetir, böylece rastgele süreçlerin ekranına dadanması engellenir.
@@ -68,9 +63,111 @@
 <img width="954" height="401" alt="image" src="https://github.com/user-attachments/assets/36e28c46-13ce-4435-834c-71929a516e3b" />
 
 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
--------------------------------------------------------------------------------
-###############################################################################
--------------------------------------------------------------------------------
+# Neden ssh user_name@user_ip hata verirken (GUI'yi çalıştırmazken) ssh -Y user_name@user_ip çalışıyor (GUI'yi çalıştırır) ?
+
+* **ssh (bayraksız) : X11 forwarding İSTEMEZ.** Uzak oturumda **$DISPLAY**ayarlanmaz, X11 cookie hazırlanmaz. PyQt "bağlanacak ekran yok" diye düşer - **Could not to any X display**
+
+* **ssh -Y :** İstemci **X11 forwarding Talep eder (trusted).** Uzakta **DISPLAY=localhost:10.0** ayarlanır, **xauth cookie** yazılır, tünel açılır. Uygulama ekrana bağlanabildiği için pencere gelir.
+
+Sunucudaki **X11Forwarding yes** sadece izin verir; **istemci talep etmedikçe** X11 tüneli kurulmaz. O talebi **-X veya -Y (ya da client config)** verir.
+
+
+### -X ve -Y farkı (neden QT bazen -X'te sorun çıkarır?)
+
+* **-X = untrusted** (güvenlik kısıtlamaları daha sıkı). Bazı Qt/OpenGL özellikleri kısıtlanır; uygulama ya çalışmaz ya da eksik çalışır.
+* **-Y = trusted** Kısıtlar kalkar; Qt/PyQt genelde sorunsuz çalışır. (Güvendiğin hostlarda kullan.)
+
+ ### Her seferinde -Y yazmadan ssh bağlantısı
+
+ 1. **İstemci tarafında (senin Ubuntu sisteminde) kalıcı ayar :**
+
+* ~/.ssh/config dosyası oluştur/editle :
+
+```cmd
+Host host_name
+  HostName host_ip        # Bağlanılacak gerçek IP/hostname
+  User remote_username    # Uzak kullanıcı adı 
+  ForwardX11 yes
+  ForwardX11Trusted yes
+  Compression yes
+```
+Artık ssh host_name yazmak yeterlidir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
